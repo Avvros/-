@@ -8,7 +8,7 @@ def make_eq_terms(x: list, idx: int, n: int, m: int):
 
 
 def polyfill(x: list, y: list, m: int):
-    n = min(len(x), m + 1)
+    n = len(x) #min(len(x), m + 1)
     eq_system = [[sum(coeff_terms) for coeff_terms in zip(*make_eq_terms(x, i, n, m))] for i in range(m + 1)]
     # for row in eq_system:
     #     print()
@@ -23,6 +23,13 @@ def polyfill(x: list, y: list, m: int):
     #with np.printoptions(precision=5, suppress=True):
         #print(R)
     return R
+
+
+def polyval(poly, x):
+    result = 0
+    for coeff in reversed(poly):
+        result = result * x + coeff
+    return result
 
 
 if __name__ == "__main__":
