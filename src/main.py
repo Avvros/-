@@ -2,10 +2,16 @@ import matplotlib.pyplot as plt
 import numpy as np
 import enum
 import approx
-import pagio
+from pagio import *
+from itertools import takewhile
+
+# Размеры сетки графиков
+dim_x = 2
+dim_y = 2
 
 
-class StandardAtmParamsIdx(enum.Enum):
+# Описание содержания параметров стандартной атмосферы
+class StandardAtmosphereParameters(enum.IntEnum):
     geom_height = 0
     geop_height = 1
     temperature_K = 2
@@ -16,29 +22,41 @@ class StandardAtmParamsIdx(enum.Enum):
     gravity_acceleration = 7
 
 
-st_atm = pagio.load("st_atm.csv")
-print(st_atm)
-base_index = StandardAtmParamsIdx.geom_height.value
-density_data = st_atm[StandardAtmParamsIdx.density.value]
-density_poly = approx.polyfill(st_atm[base_index][1], density_data[1], 2)
-with np.printoptions(precision=5, suppress=True):
-    print(density_poly)
-    print(approx.polyfill(st_atm[base_index][1], st_atm[StandardAtmParamsIdx.gravity_acceleration.value][1], 2))
-    print(approx.polyfill(st_atm[base_index][1], st_atm[StandardAtmParamsIdx.pressure_Pa.value][1], 2))
+SAP = StandardAtmosphereParameters
 
-x = np.linspace(0, st_atm[base_index][1][-1], 100)  # Sample data.
-#x = np.linspace(0, 2, 100)
 
-# Note that even in the OO-style, we use `.pyplot.figure` to create the Figure.
-fig, ax = plt.subplots()
-ax.plot(x, approx.polyval(density_poly, x), label='Density')  # Plot some data on the axes.
-#ax.plot(x, x, label='linear')
-ax.set_xlabel('Геометрическая высота h, м')  # Add an x-label to the axes.
-ax.set_ylabel('y label')  # Add a y-label to the axes.
-ax.set_title("Density")  # Add a title to the axes.
-#ax.legend()  # Add a legend.
-plt.grid()
+# Загрузка таблицы параметров стандартной атмосферы
+st_atm = load_single_arg_deps("st_atm.csv")
+
+# Аргумент функций - геометрическая высота (столбец 0)
+argument_index = 0
+
+# A
+st_atm_iter = iter(st_atm)
+next(st_atm_iter)
+height_funcs = [approx.polyfill(st_atm[argument_index][TableIndices.data], column[TableIndices.data], 2) for column in st_atm_iter]
+# print(height_funcs)
+
+# Верхняя граница высоты при построении графиков
+top = 10001
+
+# Набор высот для точек графика
+x = np.linspace(0, top, 100)
+
+# Создание окна с графиками в виде сетки dim_x на dim_y размера 10 на 10
+# получение контейнера графиков (Figure) и представлений каждого графика (Axes)
+fig, axs = plt.subplots(dim_x, dim_y, figsize=(10, 10))
+for i, val in enumerate([SAP.gravity_acceleration, SAP.density, SAP.pressure_Pa, SAP.temperature_K]):
+    ax = axs[i // dim_x, i % dim_x]
+    ax.plot(x, approx.polyval(height_funcs[val - 1], x))
+    ax.set_xlabel(st_atm[argument_index][TableIndices.labels])
+    ax.set_ylabel(st_atm[val][TableIndices.labels])  # Add a y-label to the axes.
+    ax.set_title(st_atm[val][TableIndices.headers])  # Add a title to the axes.
+    ax.set_xticks(np.arange(0, top, 1000))
+    plt.setp(ax.get_xticklabels(), rotation=45, ha='right')
+    ax.grid()
+
+[fig.delaxes(ax) for ax in axs.flatten() if not ax.has_data()]
+
+plt.tight_layout()
 plt.show()
-
-
-
