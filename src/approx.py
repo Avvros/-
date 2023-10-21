@@ -6,12 +6,11 @@ def polyfill(x: list, y: list, m: int):
     Аппроксимирует зависимость между множествами x и y к полиному степени m
     :return: массив NumPy вида [b0, b1, ... bm], соответствующий полиному :raw-html:`<br />` b0 + b1 * x + ... + bm * x ^ m
     """
-    #eq_system = [[sum(coeff_terms) for coeff_terms in zip(*make_eq_terms(x, i, m))] for i in range(m + 1)]
-    eq_system = [[sum(x[t] ** (i + j) for t in range(len(x))) for j in range(m + 1)] for i in range(m + 1)]
-    A = np.array(eq_system, dtype=float)
-    B = np.fromiter((sum(y[t] * x[t] ** i for t in range(len(x))) for i in range(m + 1)), dtype=float)
-    R = np.linalg.solve(A, B)
-    return R
+    A_raw = [[sum(x[t] ** (i + j) for t in range(len(x))) for j in range(m + 1)] for i in range(m + 1)]
+    A = np.array(A_raw, dtype=float)
+    c = np.fromiter((sum(y[t] * x[t] ** i for t in range(len(x))) for i in range(m + 1)), dtype=float)
+    b = np.linalg.solve(A, c)
+    return b
 
 
 def polyval(poly, x):

@@ -1,23 +1,22 @@
 import numpy as np
-
-from pagio import TableIndices
-import matplotlib as plt
+from matplotlib import pyplot as plt
 import approx
 
 
-def draw_plots(funcs: tuple[str, list[float], str], x, dim_x, dim_y):
-    pass
-
-# def draw_plot(poly, x):
-#     #x = np.linspace(0, table[xi][TableIndices.data.value][-1], 100)
-#
-#     # Note that even in the OO-style, we use `.pyplot.figure` to create the Figure.
-#     fig, ax = plt.subplots(dimX, dimY)
-#     ax.plot(x, approx.polyval(poly, x))  # Plot some data on the axes.
-#     # ax.plot(x, x, label='linear')
-#     ax.set_xlabel(table[base_index][labels_position])  # Add an x-label to the axes.
-#     ax.set_ylabel(table[StandardAtmParamsIdx.density.value][labels_position])  # Add a y-label to the axes.
-#     ax.set_title(table[StandardAtmParamsIdx.density.value][headers_position])  # Add a title to the axes.
-#     # ax.legend()  # Add a legend.
-#     plt.grid()
-#     plt.show()
+def draw_plot(func, x_label, y_label, title):
+    # Верхняя граница высоты при построении графиков
+    top = 10001
+    # Набор высот для точек графика
+    x = np.linspace(0, top, 100)
+    # Создание окна с графиками в виде сетки dim_x на dim_y размера 10 на 10
+    # получение контейнера графиков (Figure) и представлений каждого графика (Axes)
+    fig, ax = plt.subplots(figsize=(5, 5))
+    ax.plot(x, approx.polyval(func, x))
+    ax.set_xlabel(x_label)
+    ax.set_ylabel(y_label)  # Add a y-label to the axes.
+    ax.set_title(title)  # Add a title to the axes.
+    ax.set_xticks(np.arange(0, top, 1000))
+    plt.setp(ax.get_xticklabels(), rotation=45, ha='right')
+    ax.grid()
+    plt.tight_layout()
+    plt.show()
