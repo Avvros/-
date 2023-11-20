@@ -36,11 +36,12 @@ def input_parameters():
     options = "x:y:t:"
 
     # Long options
-    long_options = ["title="]
+    long_options = ["2D", "title="]
 
     x_label = ""
     y_label = ""
     title = ""
+    is_2d = False
     try:
         # Parsing argument
         arguments, values = getopt.getopt(argumentList, options, long_options)
@@ -57,13 +58,14 @@ def input_parameters():
             elif currentArgument in ("-t", "--title"):
                 title = currentValue
 
-        return x_label, y_label, title
+            elif currentArgument == "--2D":
+                is_2d = True
+
+        return x_label, y_label, title, is_2d
 
     except getopt.error as err:
         # output error, and return with an error code
         print(str(err))
 
 
-def input_data():
-    return list(map(locale.atof, input().split())), list(map(locale.atof, input().split()))
 

@@ -4,7 +4,7 @@ from input import input_parameters
 from plots import draw_plot
 import numpy as np
 
-x_label, y_label, title = input_parameters()
+x_label, y_label, title, is_2d = input_parameters()
 x_data = list(map(atof, input().split()))
 y_data = list(map(atof, input().split()))
 
