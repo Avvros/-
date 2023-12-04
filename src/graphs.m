@@ -18,18 +18,24 @@ aa = 10:0.1:20;
 CyCy = Cy(aa);
 CxCx = Cx(aa);
 
-
+figure(1)
 plot(MM, PP)
 grid on
 grid minor
 title("Тяга")
+xlabel('M') 
+ylabel('P, H') 
 figure(2)
 plot(aa, CxCx)
 title("Cx")
+xlabel(['\alpha, ' char(176)]) 
+ylabel('Cx') 
 grid on
 figure(3)
 plot(aa, CyCy)
 title("Cy")
+xlabel(['\alpha, ' char(176)]) 
+ylabel('Cy') 
 grid on
 
 function Cy_f = Cy(alpha)

@@ -10,7 +10,7 @@ y_data = list(map(atof, input().split()))
 
 func = polyfill(x_data, y_data, 2)
 
-with np.printoptions(precision=6, suppress=True):
+with np.printoptions(precision=2):
     print(func)
 
 draw_plot(func, x_label, y_label, title)

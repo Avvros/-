@@ -40,6 +40,11 @@ time = r[0][0][0]
 
 way = list(zip(*way))
 
+print(*reversed(r), sep='\n')
+print()
+print(*way)
+print(time)
+
 fig, ax = plt.subplots()
 #x = way[1] * times.dV + times.fa_v1
 dV = times.dV
@@ -49,14 +54,19 @@ x = [w1 * dV + fa_v1 for w1 in way[1]]
 dH = times.dH
 fa_H1 = times.fa_H1
 y = [w0 * dH + fa_H1 for w0 in way[0]]
+print(x, y, sep='\n')
 ax.plot(x, y)
 ax.set_xticks(np.arange(0, n) * times.dV + times.fa_v1)
 ax.set_yticks(np.arange(0, n) * times.dH + times.fa_H1)
+ax.set_xlim(left=x[0], right=x[-1])
+ax.set_ylim(bottom=y[0], top=y[-1])
+ax.set_xlabel("V, м/c")
+ax.set_ylabel("H, м")
+ax.set_aspect(1./ax.get_data_ratio())
 plt.grid(visible=True)
+plt.draw()
+
+ax.set_xticklabels(ax.get_xticks(), rotation = 90)
+plt.tight_layout()
+ax.spines[['right', 'top']].set_visible(False)
 plt.show()
-
-
-print(*reversed(r), sep='\n')
-print()
-print(*way)
-print(time)
